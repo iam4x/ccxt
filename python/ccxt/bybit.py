@@ -4622,6 +4622,18 @@ class bybit(Exchange):
         #
         result = self.safe_value(response, 'result', {})
         orders = self.safe_value(result, 'list', [])
+        paginationCursor = self.safe_string(result, 'nextPageCursor')
+        if paginationCursor is not None:
+            while(paginationCursor is not None):
+                params['cursor'] = paginationCursor
+                response = self.privateGetContractV3PrivateOrderUnfilledOrders(self.extend(request, params))
+                result = self.safe_value(response, 'result', {})
+                rawOrders = self.safe_value(result, 'list', [])
+                rawOrdersLength = len(rawOrders)
+                if rawOrdersLength == 0:
+                    break
+                orders = self.array_concat(rawOrders, orders)
+                paginationCursor = self.safe_string(result, 'nextPageCursor')
         return self.parse_orders(orders, market, since, limit)
 
     def fetch_usdc_open_orders(self, symbol=None, since=None, limit=None, params={}):

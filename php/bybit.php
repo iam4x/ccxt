@@ -4869,6 +4869,21 @@ class bybit extends Exchange {
         //
         $result = $this->safe_value($response, 'result', array());
         $orders = $this->safe_value($result, 'list', array());
+        $paginationCursor = $this->safe_string($result, 'nextPageCursor');
+        if ($paginationCursor !== null) {
+            while ($paginationCursor !== null) {
+                $params['cursor'] = $paginationCursor;
+                $response = $this->privateGetContractV3PrivateOrderUnfilledOrders (array_merge($request, $params));
+                $result = $this->safe_value($response, 'result', array());
+                $rawOrders = $this->safe_value($result, 'list', array());
+                $rawOrdersLength = count($rawOrders);
+                if ($rawOrdersLength === 0) {
+                    break;
+                }
+                $orders = $this->array_concat($rawOrders, $orders);
+                $paginationCursor = $this->safe_string($result, 'nextPageCursor');
+            }
+        }
         return $this->parse_orders($orders, $market, $since, $limit);
     }
 
