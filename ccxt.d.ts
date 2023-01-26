@@ -107,6 +107,8 @@ declare module 'ccxt' {
         timeInForce?: string;
         side: 'buy' | 'sell';
         price: number;
+        triggerPrice?: number;
+        stopPrice?: number;
         average?: number;
         amount: number;
         filled: number;
@@ -448,7 +450,7 @@ declare module 'ccxt' {
         withdraw (currency: string, amount: number, address: string, tag?: string, params?: Params): Promise<WithdrawalResponse>;
         YmdHMS (timestamp: string, infix: string) : string;
     }
-    
+
     /* tslint:disable */
 
     export class alpaca extends Exchange {}
@@ -562,7 +564,7 @@ declare module 'ccxt' {
     export class zb extends Exchange {}
     export class zonda extends Exchange {}
 
-    
+
     /* tslint:enable */
 
     export type ExchangeId =
@@ -676,7 +678,7 @@ declare module 'ccxt' {
         | 'zaif'
         | 'zb'
         | 'zonda'
-        
+
 
     // Pro related exports
     class ExchangePro extends Exchange {
