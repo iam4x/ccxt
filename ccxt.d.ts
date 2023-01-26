@@ -1,4 +1,4 @@
-declare module 'ccxt' {
+declare module '@iam4x/ccxt' {
 
     /**
      * Represents an associative array of a same type.
